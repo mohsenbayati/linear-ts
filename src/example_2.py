@@ -91,9 +91,9 @@ def __main__():
         "--n-value", type=int, help="number of different values to try", default=21
     )
     parser.add_argument(
-        "--dim", type=int, help="number of iterations", default=50 * 1000
+        "--dim", type=int, help="dimension d", default=1000
     )
-    parser.add_argument("--mu", type=float, help="prior mean", default=0.01)
+    parser.add_argument("--mu", type=float, help="prior mean", default=0.1)
     parser.add_argument("--rho", type=float, help="prior correlation", default=0.0)
     parser.add_argument("--sigma", type=float, help="prior sd", default=1.0)
     parser.add_argument("--tau", type=float, help="noise sd", default=1.0)

@@ -41,7 +41,11 @@ def compute_prob(n_block, sigma, tau, state_factory):
 
     ratio = (tau - sigma) * dir_mean / dir_var ** 0.5
 
-    return theta.sum() * (tau - sigma) > 0, stats.norm.cdf(ratio)
+    # stats.norm.cdf(ratio) is prob selecting action A
+    # theta.sum() * (tau - sigma) > 0 is indicator that 0 is suboptimal (A is optimal)
+    # 2*theta.sum() * (tau - sigma) > 0 is prob (A is opt and is selected)
+    
+    return theta.sum() * (tau - sigma) > 0, 2*stats.norm.cdf(ratio)
 
 
 def run_experiments(n_iter, sigma, tau, seed):
@@ -60,7 +64,7 @@ def run_experiments(n_iter, sigma, tau, seed):
 
         print(
             f"Number of blocks = {n_block:7d} -- proportion of times 0 is suboptimal = {n_subopt:.2f} -- "
-            f"min number of steps TS will fail = {n_failures[:, i].min()}"
+            f"Median # steps TS selects the suboptimal action = {np.round(np.median(n_failures[:, i]),1)}"
         )
 
     # plotting the data
@@ -68,9 +72,11 @@ def run_experiments(n_iter, sigma, tau, seed):
     plt.boxplot(n_failures, showfliers=False)
     plt.xticks(range(1, 19), [f"$2^{{{i}}}$" for i in range(1, 19)])
 
-    plt.xlabel("Number of blocks (half of the dimension)")
+    plt.xlabel("The number of blocks (half of the problem dimension)")
     plt.ylabel("Expected number of failures for LinTS")
     plt.tight_layout()
+
+    #plt.show()
 
     plt.savefig("plots/example-1.pdf")
 
